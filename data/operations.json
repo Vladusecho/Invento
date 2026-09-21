@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "equipment_id": 1,
+    "employee_id": 1,
+    "operation_type": "выдача",
+    "date": "2026-09-15",
+    "note": "Для работы над проектом",
+    "is_completed": false
+  }
+]

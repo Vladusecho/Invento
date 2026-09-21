@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "Ноутбук Dell Latitude",
+    "category": "ПК",
+    "model": "Latitude 5420",
+    "serial_number": "SN-0001",
+    "location": "Аудитория 305",
+    "status": "в эксплуатации"
+  }
+]

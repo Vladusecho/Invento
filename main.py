@@ -1,155 +1,271 @@
-equipment_list = []  # список словарей
-next_id = 1         # автоинкремент ID
+"""Точка входа: консольное меню системы учета оборудования."""
+
+from typing import List, Optional
+
+from models import Equipment, Employee, Operation
+from storage import (
+    find_employee_by_id,
+    find_equipment_by_id,
+    load_employees,
+    load_equipment,
+    load_operations,
+    save_employees,
+    save_equipment,
+    save_operations,
+)
+from utils import input_int, input_str
+
+# ---------- Оборудование ----------
+
+def show_equipment(equipment: List[Equipment]) -> None:
+    """Вывести список оборудования."""
+    if not equipment:
+        print("Список оборудования пуст.")
+        return
+    print("\n" + "-" * 100)
+    for item in equipment:
+        print(item)
+    print("-" * 100 + "\n")
 
 
-def add_equipment():
-    global next_id
-    name = input("Наименование: ").strip()
-    category = input("Категория (ПК / Принтер / Сетевое и т.п.): ").strip()
-    model = input("Модель: ").strip()
-    serial = input("Серийный номер: ").strip()
-    location = input("Локация: ").strip()
-    status = input("Состояние (по умолчанию 'в эксплуатации'): ").strip() or "в эксплуатации"
+def add_equipment(equipment: List[Equipment]) -> Equipment:
+    """Добавить новую единицу оборудования."""
+    new_id = max((e.id for e in equipment), default=0) + 1
+    name = input_str("Наименование: ")
+    category = input_str("Категория: ")
+    model = input_str("Модель: ")
+    serial = input_str("Серийный номер: ")
+    location = input_str("Локация: ")
+    status = input("Состояние (Enter — 'в эксплуатации'): ").strip() or "в эксплуатации"
 
-    item = {
-        "id": next_id,
-        "name": name,
-        "category": category,
-        "model": model,
-        "serial_number": serial,
-        "location": location,
-        "status": status,
-    }
-    equipment_list.append(item)
-    next_id += 1
+    if not Equipment.validate_status(status):
+        print("Недопустимый статус, установлено 'в эксплуатации'.")
+        status = "в эксплуатации"
+
+    item = Equipment(new_id, name, category, model, serial, location, status)
+    equipment.append(item)
     print("Оборудование добавлено.")
+    return item
 
 
-def list_equipment(rows=None):
-    if rows is None:
-        rows = equipment_list
-
-    if not rows:
-        print("Список пуст.")
+def edit_equipment(equipment: List[Equipment]) -> None:
+    """Редактировать запись оборудования."""
+    eq_id = input_int("ID оборудования: ")
+    item = find_equipment_by_id(equipment, eq_id)
+    if item is None:
+        print("Не найдено.")
         return
 
-    print("\n{:<4} {:<20} {:<12} {:<15} {:<15} {:<15}".format(
-        "ID", "Наименование", "Категория", "Модель", "Локация", "Состояние"))
-    print("-" * 95)
-    for r in rows:
-        print("{:<4} {:<20} {:<12} {:<15} {:<15} {:<15}".format(
-            r["id"], r["name"][:19], r["category"][:11],
-            r["model"][:14], r["location"][:14], r["status"][:14]))
-    print()
-
-
-def find_by_id(eq_id):
-    for r in equipment_list:
-        if r["id"] == eq_id:
-            return r
-    return None
-
-
-def edit_equipment():
-    try:
-        eq_id = int(input("ID записи для редактирования: "))
-    except ValueError:
-        print("Введите число.")
-        return
-
-    item = find_by_id(eq_id)
-    if not item:
-        print("Запись не найдена.")
-        return
-
-    print("Текущие данные:", item)
-    print("Поля: name, category, model, serial_number, location, status")
-    field = input("Какое поле изменить? ").strip()
-
-    if field not in item:
+    print("Текущее:", item)
+    field = input("Поле (name/category/model/serial_number/location/status): ").strip()
+    if field not in {"name", "category", "model", "serial_number", "location", "status"}:
         print("Недопустимое поле.")
         return
 
-    value = input("Новое значение: ").strip()
-    item[field] = value
-    print("Запись обновлена.")
-
-
-def delete_equipment():
-    try:
-        eq_id = int(input("ID записи для удаления: "))
-    except ValueError:
-        print("Введите число.")
+    value = input_str("Новое значение: ")
+    if field == "status" and not Equipment.validate_status(value):
+        print("Недопустимый статус.")
         return
 
-    item = find_by_id(eq_id)
-    if not item:
-        print("Запись не найдена.")
-        return
+    setattr(item, field, value)
+    print("Обновлено.")
 
-    confirm = input(f"Удалить '{item['name']}' (ID={eq_id})? (y/n): ").strip().lower()
+
+def delete_equipment(equipment: List[Equipment]) -> None:
+    """Удалить оборудование."""
+    eq_id = input_int("ID оборудования: ")
+    item = find_equipment_by_id(equipment, eq_id)
+    if item is None:
+        print("Не найдено.")
+        return
+    confirm = input(f"Удалить '{item.name}'? (y/n): ").strip().lower()
     if confirm == "y":
-        equipment_list.remove(item)
-        print("Запись удалена.")
-    else:
-        print("Отменено.")
+        equipment.remove(item)
+        print("Удалено.")
 
 
-def search_equipment():
-    keyword = input("Введите ключевое слово: ").strip().lower()
-    result = [
-        r for r in equipment_list
-        if keyword in r["name"].lower()
-        or keyword in r["model"].lower()
-        or keyword in r["serial_number"].lower()
+def search_equipment(equipment: List[Equipment]) -> None:
+    """Поиск по названию, модели, серийному номеру."""
+    keyword = input_str("Ключевое слово: ").lower()
+    found = [
+        e for e in equipment
+        if keyword in e.name.lower()
+        or keyword in e.model.lower()
+        or keyword in e.serial_number.lower()
     ]
-    list_equipment(result)
+    show_equipment(found)
 
 
-def filter_by_category():
-    category = input("Введите категорию: ").strip().lower()
-    result = [r for r in equipment_list if category in r["category"].lower()]
-    list_equipment(result)
+def filter_equipment_by_category(equipment: List[Equipment]) -> None:
+    """Фильтр по категории."""
+    category = input_str("Категория: ").lower()
+    found = [e for e in equipment if category in e.category.lower()]
+    show_equipment(found)
 
 
-def menu():
+# ---------- Сотрудники ----------
+
+def show_employees(employees: List[Employee]) -> None:
+    """Вывести сотрудников."""
+    if not employees:
+        print("Список сотрудников пуст.")
+        return
+    print("\n" + "-" * 80)
+    for emp in employees:
+        print(emp)
+    print("-" * 80 + "\n")
+
+
+def add_employee(employees: List[Employee]) -> Employee:
+    """Добавить сотрудника."""
+    new_id = max((e.id for e in employees), default=0) + 1
+    name = input_str("ФИО: ")
+    department = input_str("Отдел: ")
+    email = input_str("Email: ")
+    emp = Employee(new_id, name, department, email)
+    employees.append(emp)
+    print("Сотрудник добавлен.")
+    return emp
+
+
+# ---------- Операции ----------
+
+def show_operations(operations: List[Operation]) -> None:
+    """Вывести операции."""
+    if not operations:
+        print("Список операций пуст.")
+        return
+    print("\n" + "-" * 100)
+    for op in operations:
+        print(op)
+    print("-" * 100 + "\n")
+
+
+def create_operation(
+    operations: List[Operation],
+    equipment: List[Equipment],
+    employees: List[Employee],
+) -> Optional[Operation]:
+    """Создать операцию: выдача / возврат / ремонт / списание."""
+    eq_id = input_int("ID оборудования: ")
+    eq = find_equipment_by_id(equipment, eq_id)
+    if eq is None:
+        print("Оборудование не найдено.")
+        return None
+
+    op_type = input_str("Тип (выдача/возврат/ремонт/списание): ").lower()
+    if op_type not in {"выдача", "возврат", "ремонт", "списание"}:
+        print("Недопустимый тип операции.")
+        return None
+
+    employee: Optional[Employee] = None
+    if op_type == "выдача":
+        emp_id = input_int("ID сотрудника: ")
+        employee = find_employee_by_id(employees, emp_id)
+        if employee is None:
+            print("Сотрудник не найден.")
+            return None
+
+    date = input_str("Дата (YYYY-MM-DD): ")
+    note = input("Примечание (Enter — пропустить): ").strip()
+
+    new_id = max((o.id for o in operations), default=0) + 1
+    op = Operation(new_id, eq, employee, op_type, date, note)
+
+    # Изменение состояния оборудования по типу операции
+    if op_type == "списание":
+        eq.status = "списано"
+    elif op_type == "ремонт":
+        eq.status = "неисправно"
+    elif op_type == "возврат":
+        eq.status = "на складе"
+
+    operations.append(op)
+    print(f"Операция создана (ID={op.id}).")
+    return op
+
+
+def complete_operation(operations: List[Operation]) -> None:
+    """Завершить операцию по ID."""
+    op_id = input_int("ID операции: ")
+    for op in operations:
+        if op.id == op_id:
+            op.complete()
+            print("Операция завершена.")
+            return
+    print("Операция не найдена.")
+
+
+# ---------- Меню ----------
+
+def menu() -> None:
+    """Показать меню."""
     print("""
 ╔══════════════════════════════════════════╗
 ║   СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ (EquipTrack)║
 ╠══════════════════════════════════════════╣
-║ 1. Показать все                         ║
-║ 2. Добавить оборудование                ║
-║ 3. Редактировать оборудование           ║
-║ 4. Удалить оборудование                 ║
-║ 5. Поиск по названию/модели/серийнику   ║
-║ 6. Фильтр по категории                  ║
-║ 0. Выход                                ║
+║  ОБОРУДОВАНИЕ                            ║
+║   1. Показать все                        ║
+║   2. Добавить                            ║
+║   3. Редактировать                       ║
+║   4. Удалить                             ║
+║   5. Поиск (название/модель/серийник)    ║
+║   6. Фильтр по категории                 ║
+║  СОТРУДНИКИ                              ║
+║   7. Показать сотрудников                ║
+║   8. Добавить сотрудника                 ║
+║  ОПЕРАЦИИ                                ║
+║   9. Показать операции                   ║
+║  10. Создать операцию                    ║
+║  11. Завершить операцию                  ║
+║   0. Выход                               ║
 ╚══════════════════════════════════════════╝
 """)
 
 
-def main():
+def main() -> None:
+    """Точка входа приложения."""
+    equipment = load_equipment()
+    employees = load_employees()
+    operations = load_operations(equipment, employees)
+
+    print(f"Загружено: оборудование={len(equipment)}, "
+          f"сотрудники={len(employees)}, операции={len(operations)}")
+
     while True:
         menu()
         choice = input("Выберите пункт: ").strip()
 
         if choice == "1":
-            list_equipment()
+            show_equipment(equipment)
         elif choice == "2":
-            add_equipment()
+            add_equipment(equipment)
         elif choice == "3":
-            edit_equipment()
+            edit_equipment(equipment)
         elif choice == "4":
-            delete_equipment()
+            delete_equipment(equipment)
         elif choice == "5":
-            search_equipment()
+            search_equipment(equipment)
         elif choice == "6":
-            filter_by_category()
+            filter_equipment_by_category(equipment)
+        elif choice == "7":
+            show_employees(employees)
+        elif choice == "8":
+            add_employee(employees)
+        elif choice == "9":
+            show_operations(operations)
+        elif choice == "10":
+            create_operation(operations, equipment, employees)
+        elif choice == "11":
+            complete_operation(operations)
         elif choice == "0":
-            print("👋 Выход.")
+            save_equipment(equipment)
+            save_employees(employees)
+            save_operations(operations)
+            print("Данные сохранены. Выход.")
             break
         else:
-            print("❌ Неверный пункт меню.")
+            print("Неверный пункт меню.")
 
 
 if __name__ == "__main__":
