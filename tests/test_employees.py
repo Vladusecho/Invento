@@ -1,6 +1,12 @@
 """Тесты для класса Employee."""
 
+import sys
 from models import Employee
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 def test_employee_creation():
@@ -23,3 +29,7 @@ def test_employee_from_and_to_data():
 def test_employee_str():
     emp = Employee(1, "Иван Петров", "ИТ", "ivan@example.com")
     assert "Иван Петров" in str(emp)
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__]))
