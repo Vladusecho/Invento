@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+Поиск доступного оборудования – Invento
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">Поиск доступного оборудования</h1>
+    <a href="{% url 'equipment:list' %}" class="btn btn-outline-secondary btn-sm">
+        ← к общему списку
+    </a>
+</div>
+<p class="text-muted">
+    Проверка наличия оборудования, не находящегося в процессе ремонта на выбранную дату:
+</p>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-auto">
+                <label for="date-input" class="form-label fw-bold">Дата проверки:</label>
+                <input
+                    type="date"
+                    id="date-input"
+                    name="date"
+                    class="form-control"
+                    value="{{ search_date|default:'' }}"
+                    required
+                >
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    Найти доступное оборудование
+                </button>
+            </div>
+            {% if search_date %}
+                <div class="col-auto">
+                    <a href="{% url 'equipment:available' %}" class="btn btn-outline-secondary">
+                        Сбросить
+                    </a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% if search_date %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Доступно на {{ search_date }}:</h2>
+        <span class="badge bg-success fs-6">
+            Найдено: {{ equipment|length }}
+        </span>
+    </div>
+
+    <div class="equipment-list mt-3">
+        {% for item in equipment %}
+            {% include "equipment/includes/equipment_card.html" %}
+        {% empty %}
+            <div class="alert alert-warning">
+                На выбранную дату свободного оборудования не найдено.
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

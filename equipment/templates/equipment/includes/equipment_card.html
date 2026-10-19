@@ -4,9 +4,9 @@
             <h2 class="h5 card-title mb-0">
                 {{ item.name|default:"Без названия" }}
             </h2>
-            {% if item.is_in_use %}
+            {% if item.status == "в эксплуатации" or item.is_in_use %}
                 <span class="badge bg-success">в эксплуатации</span>
-            {% elif item.is_broken %}
+            {% elif item.status == "неисправно" or item.is_broken %}
                 <span class="badge bg-danger">неисправно</span>
             {% else %}
                 <span class="badge bg-secondary">{{ item.status }}</span>

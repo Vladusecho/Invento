@@ -7,9 +7,14 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h2 mb-0">Журнал операций</h1>
-    <span class="badge bg-primary fs-6">
-        Всего записей: {{ operations|length }}
-    </span>
+    <div>
+        <a href="{% url 'operations:statistics' %}" class="btn btn-outline-primary btn-sm me-2">
+            📊 Аналитика и статистика
+        </a>
+        <span class="badge bg-primary fs-6">
+            Всего записей: {{ operations|length }}
+        </span>
+    </div>
 </div>
 <p class="text-muted">История перемещений, ремонтов, выдачи и списания техники:</p>
 
@@ -18,11 +23,11 @@
         <div class="list-group-item d-flex justify-content-between align-items-center py-3">
             <div>
                 <a href="{% url 'operations:detail' operation.id %}" class="fw-bold text-decoration-none fs-5">
-                    Операция №{{ operation.id }}: {{ operation.operation_type|capfirst }} – {{ operation.equipment.name }}
+                    Операция №{{ operation.id }}: {{ operation.operation_type|capfirst }} – {{ operation.equipment_name }}
                 </a>
                 <div class="text-muted mt-1 small">
                     <span class="me-3">📅 Дата: {{ operation.date }}</span>
-                    <span>👤 Ответственный: {{ operation.employee.name|default:"—" }}</span>
+                    <span>👤 Ответственный: {{ operation.employee_name|default:"—" }}</span>
                 </div>
             </div>
             <div>
