@@ -7,5 +7,14 @@
     "serial_number": "SN-0001",
     "location": "Аудитория 305",
     "status": "в эксплуатации"
+  },
+  {
+    "id": 2,
+    "name": "ноут",
+    "category": "устройства",
+    "model": "demix",
+    "serial_number": "1499",
+    "location": "usa",
+    "status": "в эксплуатации"
   }
 ]

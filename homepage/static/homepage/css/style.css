@@ -1,0 +1,48 @@
+/* Собственные стили проекта Invento */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.invento-logo {
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+}
+
+.equipment-card {
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.equipment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.operation-status {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.operation-status-active {
+    background-color: #198754;
+}
+
+.operation-status-completed {
+    background-color: #6c757d;
+}
+
+footer {
+    border-top: 1px solid #e9ecef;
+}

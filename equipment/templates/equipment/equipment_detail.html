@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if equipment %}
+        {{ equipment.name }} – Invento
+    {% else %}
+        Оборудование не найдено – Invento
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if equipment %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="card-title h3 mb-0">{{ equipment.name }}</h1>
+                    {% if equipment.is_in_use %}
+                        <span class="badge bg-success">в эксплуатации</span>
+                    {% elif equipment.is_broken %}
+                        <span class="badge bg-danger">неисправно</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ equipment.status }}</span>
+                    {% endif %}
+                </div>
+                <hr>
+                <p class="card-text"><strong>Инвентарный ID:</strong> {{ equipment.id }}</p>
+                <p class="card-text"><strong>Категория:</strong> {{ equipment.category }}</p>
+                <p class="card-text"><strong>Модель:</strong> {{ equipment.model }}</p>
+                <p class="card-text"><strong>Серийный номер:</strong> {{ equipment.serial_number }}</p>
+                <p class="card-text"><strong>Текущая локация:</strong> {{ equipment.location }}</p>
+                <p class="card-text"><strong>Состояние:</strong> {{ equipment.status }}</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger">
+            <h1 class="h4 text-danger mb-2">Оборудование не найдено</h1>
+            <p class="mb-0">Единица оборудования с указанным идентификатором отсутствует в системе.</p>
+        </div>
+    {% endif %}
+    <a href="{% url 'equipment:list' %}" class="btn btn-outline-secondary mt-2">
+        ← к списку оборудования
+    </a>
+{% endblock %}

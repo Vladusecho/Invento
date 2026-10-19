@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+Журнал операций – Invento
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">Журнал операций</h1>
+    <span class="badge bg-primary fs-6">
+        Всего записей: {{ operations|length }}
+    </span>
+</div>
+<p class="text-muted">История перемещений, ремонтов, выдачи и списания техники:</p>
+
+<div class="list-group shadow-sm mt-3">
+    {% for operation in operations %}
+        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+            <div>
+                <a href="{% url 'operations:detail' operation.id %}" class="fw-bold text-decoration-none fs-5">
+                    Операция №{{ operation.id }}: {{ operation.operation_type|capfirst }} – {{ operation.equipment.name }}
+                </a>
+                <div class="text-muted mt-1 small">
+                    <span class="me-3">📅 Дата: {{ operation.date }}</span>
+                    <span>👤 Ответственный: {{ operation.employee.name|default:"—" }}</span>
+                </div>
+            </div>
+            <div>
+                {% include "operations/includes/operation_status.html" %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info mb-0">
+            Операции не найдены.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

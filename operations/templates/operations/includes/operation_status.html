@@ -1,0 +1,9 @@
+{% if operation.is_completed %}
+    <span class="badge bg-secondary operation-status operation-status-completed">
+        завершена
+    </span>
+{% else %}
+    <span class="badge bg-success operation-status operation-status-active">
+        активна
+    </span>
+{% endif %}

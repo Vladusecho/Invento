@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+Главная – Invento
+{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 border">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold">Invento</h1>
+        <p class="col-md-9 fs-5 text-muted">
+            Автоматизированная система учета оборудования (АСУО).
+            Централизованный контроль жизненного цикла техники, перемещений, выдачи сотрудникам и технического обслуживания.
+        </p>
+        <hr class="my-4">
+        <p class="mb-3 fw-semibold">Основные разделы системы:</p>
+        <div class="d-flex gap-2">
+            <a href="{% url 'equipment:list' %}" class="btn btn-primary btn-lg px-4">
+                Оборудование
+            </a>
+            <a href="{% url 'operations:list' %}" class="btn btn-secondary btn-lg px-4">
+                Журнал операций
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
