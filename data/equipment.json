@@ -10,11 +10,38 @@
   },
   {
     "id": 2,
-    "name": "ноут",
-    "category": "устройства",
-    "model": "demix",
-    "serial_number": "1499",
-    "location": "usa",
+    "name": "Рабочая станция Demix",
+    "category": "ПК",
+    "model": "Demix Pro-1",
+    "serial_number": "SN-0002",
+    "location": "Аудитория 306",
     "status": "в эксплуатации"
+  },
+  {
+    "id": 3,
+    "name": "Принтер HP LaserJet",
+    "category": "Оргтехника",
+    "model": "Pro M404dn",
+    "serial_number": "SN-HP-991",
+    "location": "Бухгалтерия 102",
+    "status": "в эксплуатации"
+  },
+  {
+    "id": 4,
+    "name": "Коммутатор Cisco Catalyst",
+    "category": "Сетевое оборудование",
+    "model": "2960-X",
+    "serial_number": "SN-CS-402",
+    "location": "Серверная 201",
+    "status": "в эксплуатации"
+  },
+  {
+    "id": 5,
+    "name": "Проектор Epson EB-X41",
+    "category": "Мультимедиа",
+    "model": "EB-X41",
+    "serial_number": "SN-EP-105",
+    "location": "Конференц-зал 1",
+    "status": "неисправно"
   }
 ]

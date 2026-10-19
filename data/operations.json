@@ -6,6 +6,42 @@
     "operation_type": "выдача",
     "date": "2026-09-15",
     "note": "Для работы над проектом",
+    "is_completed": true
+  },
+  {
+    "id": 2,
+    "equipment_id": 3,
+    "employee_id": 2,
+    "operation_type": "выдача",
+    "date": "2026-09-18",
+    "note": "Установка в бухгалтерии",
+    "is_completed": true
+  },
+  {
+    "id": 3,
+    "equipment_id": 5,
+    "employee_id": 3,
+    "operation_type": "ремонт",
+    "date": "2026-10-01",
+    "note": "Замена лампы проектора",
+    "is_completed": false
+  },
+  {
+    "id": 4,
+    "equipment_id": 1,
+    "employee_id": 1,
+    "operation_type": "возврат",
+    "date": "2026-10-10",
+    "note": "Плановый возврат на склад",
+    "is_completed": true
+  },
+  {
+    "id": 5,
+    "equipment_id": 4,
+    "employee_id": 1,
+    "operation_type": "выдача",
+    "date": "2026-10-12",
+    "note": "Монтаж в серверную",
     "is_completed": false
   }
 ]

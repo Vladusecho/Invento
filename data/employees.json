@@ -4,5 +4,17 @@
     "name": "Иван Петров",
     "department": "ИТ-отдел",
     "email": "ivan@example.com"
+  },
+  {
+    "id": 2,
+    "name": "Анна Смирнова",
+    "department": "Бухгалтерия",
+    "email": "smirnova@example.com"
+  },
+  {
+    "id": 3,
+    "name": "Алексей Сидоров",
+    "department": "ИТ-отдел",
+    "email": "sidorov@example.com"
   }
 ]
