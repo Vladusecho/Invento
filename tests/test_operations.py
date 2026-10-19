@@ -23,7 +23,10 @@ def test_operation_creation():
 
 
 def test_operation_complete():
-    op = Operation(1, _make_equipment(), _make_employee(), "ремонт", "2026-09-15")
+    op = Operation(
+        1, _make_equipment(), _make_employee(), "ремонт", "2026-09-15"
+    )
+
     op.complete()
     assert op.is_completed
 

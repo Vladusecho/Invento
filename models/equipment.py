@@ -1,7 +1,10 @@
 """Модель единицы оборудования."""
 
+from typing import List, Optional
+
 
 class Equipment:
+
     """Единица оборудования."""
 
     def __init__(
@@ -69,3 +72,14 @@ class Equipment:
             f"модель: {self.model}, SN: {self.serial_number}, "
             f"локация: {self.location}, состояние: {self.status}"
         )
+
+
+def find_equipment_by_id(
+    equipment: List[Equipment],
+    equipment_id: int,
+) -> Optional[Equipment]:
+    """Найти оборудование по идентификатору."""
+    for item in equipment:
+        if item.id == equipment_id:
+            return item
+    return None

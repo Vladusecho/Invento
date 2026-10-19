@@ -17,7 +17,9 @@ from utils import input_int, input_str
 
 # ---------- Оборудование ----------
 
+
 def show_equipment(equipment: List[Equipment]) -> None:
+
     """Вывести список оборудования."""
     if not equipment:
         print("Список оборудования пуст.")
@@ -36,9 +38,11 @@ def add_equipment(equipment: List[Equipment]) -> Equipment:
     model = input_str("Модель: ")
     serial = input_str("Серийный номер: ")
     location = input_str("Локация: ")
-    status = input("Состояние (Enter — 'в эксплуатации'): ").strip() or "в эксплуатации"
+    status_prompt = "Состояние (Enter — 'в эксплуатации'): "
+    status = input(status_prompt).strip() or "в эксплуатации"
 
     if not Equipment.validate_status(status):
+
         print("Недопустимый статус, установлено 'в эксплуатации'.")
         status = "в эксплуатации"
 
@@ -56,9 +60,13 @@ def edit_equipment(equipment: List[Equipment]) -> None:
         print("Не найдено.")
         return
 
-    print("Текущее:", item)
-    field = input("Поле (name/category/model/serial_number/location/status): ").strip()
-    if field not in {"name", "category", "model", "serial_number", "location", "status"}:
+    allowed_fields = {
+        "name", "category", "model",
+        "serial_number", "location", "status",
+    }
+    field = input("Поле для изменения: ").strip()
+    if field not in allowed_fields:
+
         print("Недопустимое поле.")
         return
 

@@ -4,7 +4,10 @@ from models import Equipment
 
 
 def test_equipment_creation():
-    eq = Equipment(1, "Ноутбук Dell", "ПК", "Latitude 5420", "SN-001", "Аудитория 305")
+    eq = Equipment(
+        1, "Ноутбук Dell", "ПК", "Latitude 5420", "SN-001", "Аудитория 305"
+    )
+
     assert eq.id == 1
     assert eq.name == "Ноутбук Dell"
     assert eq.category == "ПК"

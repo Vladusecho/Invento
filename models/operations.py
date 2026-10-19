@@ -1,6 +1,7 @@
 """Модель операции с оборудованием (перемещение, ремонт, списание)."""
 
-from typing import Optional
+from typing import List, Optional
+
 
 from .equipment import Equipment
 from .employees import Employee
@@ -74,3 +75,14 @@ class Operation:
             f"оборудование: {self.equipment.name} | "
             f"сотрудник: {emp} | дата: {self.date} | {state}"
         )
+
+
+def find_operation_by_id(
+    operations: List[Operation],
+    operation_id: int,
+) -> Optional[Operation]:
+    """Найти операцию по идентификатору."""
+    for item in operations:
+        if item.id == operation_id:
+            return item
+    return None

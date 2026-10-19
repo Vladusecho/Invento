@@ -38,4 +38,7 @@ class Employee:
 
     def __str__(self) -> str:
         """Строковое представление сотрудника."""
-        return f"[{self.id}] {self.name} ({self.department}), email: {self.email}"
+        return (
+            f"[{self.id}] {self.name} ({self.department}), "
+            f"email: {self.email}"
+        )

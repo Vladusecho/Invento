@@ -58,7 +58,8 @@ def load_operations(
     equipment: List[Equipment],
     employees: List[Employee],
 ) -> List[Operation]:
-    """Загрузить операции и восстановить связи с оборудованием и сотрудниками."""
+    """Загрузить операции и восстановить связи с объектами."""
+
     data = _load_json(OPERATIONS_FILE)
     operations: List[Operation] = []
 
@@ -99,5 +100,15 @@ def find_employee_by_id(
     """Найти сотрудника по идентификатору."""
     for item in employees:
         if item.id == employee_id:
+            return item
+    return None
+
+
+def find_operation_by_id(
+    operations: List[Operation], operation_id: int
+) -> Operation | None:
+    """Найти операцию по идентификатору."""
+    for item in operations:
+        if item.id == operation_id:
             return item
     return None
